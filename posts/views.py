@@ -9,7 +9,7 @@ from rest_framework import status
 from .permissions import IsPostOwner
 
 class PostListAPIView(generics.ListCreateAPIView):
-    queryset = Post.objects.all()
+    queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostSerializer
 
 class PostDetailAPIView(generics.RetrieveDestroyAPIView):
@@ -21,4 +21,4 @@ class PostDetailAPIView(generics.RetrieveDestroyAPIView):
             self.permission_classes = [IsPostOwner] #비번 맞는지 확인
         else: 
             self.permission_classes = []
-        return super(PostListAPIView, self).get_permissions()    
+        return super(PostDetailAPIView, self).get_permissions()    
