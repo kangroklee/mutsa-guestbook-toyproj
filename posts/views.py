@@ -6,12 +6,19 @@ from .serializers import PostSerializer
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
+from .permissions import IsPostOwner
 
 class PostListAPIView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
-class PostDeleteAPIView(generics.DestroyAPIView):
-    permission_classes = [] #비번 맞는지 확인
+class PostDetailAPIView(generics.RetrieveDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+    def get_permissions(self):
+        if self.request.method == 'DELETE':
+            self.permission_classes = [IsPostOwner] #비번 맞는지 확인
+        else: 
+            self.permission_classes = []
+        return super(PostListAPIView, self).get_permissions()    
